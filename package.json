@@ -1,0 +1,45 @@
+{
+  "name": "@togo-framework/ui-marketing",
+  "version": "0.1.0",
+  "description": "togo UI kit — landing/docs/marketing page components (Marketing, Glass, Marketplace, Docs, Terminal, ClaudeSession, BrowserFrame, MascotMark) plus the dynamic editable section board. Depends on @togo-framework/ui-core and @togo-framework/ui-markdown.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "prepare": "tsup"
+  },
+  "peerDependencies": {
+    "lucide-react": ">=0.400.0",
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "dependencies": {
+    "@togo-framework/ui-core": "^0.1.2",
+    "@togo-framework/ui-markdown": "^0.1.0",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "lucide-react": "^0.462.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0"
+  }
+}

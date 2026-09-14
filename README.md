@@ -2,7 +2,7 @@
 # @togo-framework/ui-marketing
 
 Landing/docs/marketing page components (`Marketing`, `Glass`, `Marketplace`,
-`Docs`, `Terminal`, `ClaudeSession`, `BrowserFrame`, `MascotMark`) plus the
+`Docs`, `Terminal`, `ClaudeSession`, `BrowserFrame`) plus the
 dynamic editable section board (`SectionBoard`). Part of the togo UI kit.
 
 ```bash

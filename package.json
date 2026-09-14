@@ -1,7 +1,7 @@
 {
   "name": "@togo-framework/ui-marketing",
   "version": "0.1.0",
-  "description": "togo UI kit — landing/docs/marketing page components (Marketing, Glass, Marketplace, Docs, Terminal, ClaudeSession, BrowserFrame, MascotMark) plus the dynamic editable section board. Depends on @togo-framework/ui-core and @togo-framework/ui-markdown.",
+  "description": "togo UI kit — landing/docs/marketing page components (Marketing, Glass, Marketplace, Docs, Terminal, ClaudeSession, BrowserFrame) plus the dynamic editable section board. Depends on @togo-framework/ui-core and @togo-framework/ui-markdown.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",

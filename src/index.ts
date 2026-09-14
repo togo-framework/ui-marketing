@@ -12,4 +12,3 @@ export * from "./components/marketing/Docs";
 export * from "./components/marketing/Terminal";
 export * from "./components/marketing/ClaudeSession";
 export * from "./components/marketing/BrowserFrame";
-export * from "./components/marketing/MascotMark";

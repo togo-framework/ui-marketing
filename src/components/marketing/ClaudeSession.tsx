@@ -32,7 +32,7 @@ export interface ClaudeSessionProps {
 
 const Tool = ({ tool, arg }: { tool: string; arg: string }) => (
   <div className="whitespace-pre-wrap break-words">
-    <span className="text-[#28c840]">⏺ </span>
+    <span className="text-success">⏺ </span>
     <span className="text-foreground font-semibold">{tool}</span>
     <span className="text-muted-foreground">({arg})</span>
   </div>
@@ -41,10 +41,10 @@ const Result = ({ text }: { text: string }) => (
   <div className="whitespace-pre-wrap break-words text-muted-foreground ps-3"><span className="text-muted-foreground/60">⎿  </span>{text}</div>
 );
 const User = ({ text }: { text: string }) => (
-  <div className="whitespace-pre-wrap break-words"><span className="text-[#5CDDEC]">&gt; </span><span className="text-foreground">{text}</span></div>
+  <div className="whitespace-pre-wrap break-words"><span className="text-primary">&gt; </span><span className="text-foreground">{text}</span></div>
 );
 const Assistant = ({ text }: { text: string }) => (
-  <div className="whitespace-pre-wrap break-words text-foreground/80"><span className="text-[var(--togo-cyan,#5CDDEC)]">✻ </span>{text}</div>
+  <div className="whitespace-pre-wrap break-words text-foreground/80"><span className="text-primary">✻ </span>{text}</div>
 );
 
 function fullFrame(steps: ClaudeStep[]): React.ReactNode[] {
@@ -86,7 +86,7 @@ export function ClaudeSession({ steps, endSlot, title = "✻ Claude Code — tog
           const s = steps[i];
           if (s.kind === "user") {
             for (let c = 1; c <= s.text.length && alive; c++) {
-              setLines([...acc, <div key={`u${i}`} className="whitespace-pre-wrap break-words"><span className="text-[#5CDDEC]">&gt; </span><span className="text-foreground">{s.text.slice(0, c)}</span><span className="ml-0.5 inline-block w-2 -mb-0.5 h-4 bg-[#5CDDEC] animate-pulse" /></div>]);
+              setLines([...acc, <div key={`u${i}`} className="whitespace-pre-wrap break-words"><span className="text-primary">&gt; </span><span className="text-foreground">{s.text.slice(0, c)}</span><span className="ml-0.5 inline-block w-2 -mb-0.5 h-4 bg-primary animate-pulse" /></div>]);
               toBottom(); await wait(typeMs);
             }
             acc.push(<User key={`u${i}`} text={s.text} />);
@@ -111,9 +111,9 @@ export function ClaudeSession({ steps, endSlot, title = "✻ Claude Code — tog
   }, [steps, typeMs, lineMs, loop, runId]);
 
   return (
-    <div className={cn("rounded-2xl border border-border overflow-hidden bg-[#080b0f] shadow-2xl", className)}>
+    <div className={cn("border border-border overflow-hidden bg-background", className)}>
       <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
-        <Sparkles size={13} className="text-[var(--togo-cyan,#5CDDEC)]" />
+        <Sparkles size={13} className="text-primary" />
         <span className="font-mono text-xs text-muted-foreground">{title}</span>
         {done && !loop && (
           <button type="button" onClick={() => setRunId((n) => n + 1)}

@@ -31,7 +31,7 @@ export const WithEndSlot: Story = {
     steps: STEPS,
     height: 360,
     endSlot: (
-      <div className="rounded-lg border border-white/10 bg-[#0b0f13] p-4 text-sm text-muted-foreground font-mono">
+      <div className="rounded-lg border border-white/10 bg-background p-4 text-sm text-muted-foreground font-mono">
         ▸ app running at localhost:8080/posts
       </div>
     ),

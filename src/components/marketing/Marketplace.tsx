@@ -5,7 +5,7 @@ import type { LucideIcon } from "lucide-react";
 import { Search, Star, Download } from "lucide-react";
 import { cn } from "@togo-framework/ui-core";
 
-const DISPLAY: React.CSSProperties = { fontFamily: '"Sora", var(--togo-font-body, ui-sans-serif, system-ui, sans-serif)' };
+const DISPLAY: React.CSSProperties = { fontFamily: "var(--togo-font-display, ui-sans-serif, system-ui, sans-serif)" };
 
 // A real brand glyph (simple-icons path + official hex), so brand plugins render
 // their actual logo/color instead of a generic category icon.
@@ -55,17 +55,17 @@ export function MarketplaceCard({
   name, href, category, color, categoryColor, icon: Icon, brandIcon,
   description, author, stars, downloads, enabled, providers, className,
 }: MarketplaceCardProps) {
-  const tint = color || categoryColor || "#2D8CE6";
+  const tint = color || categoryColor || "#1F8A99";
   const shown = (providers || []).slice(0, 5);
   const extra = (providers || []).length - shown.length;
   return (
     <a href={href} className={cn("group block h-full", className)}>
-      <div className="rounded-2xl border border-border bg-card p-5 h-full flex flex-col transition-all duration-200 hover:border-foreground/30 hover:shadow-md">
+      <div className="rounded-2xl border border-border bg-card p-5 h-full flex flex-col transition-colors hover:border-foreground/30">
         {/* header — solid brand-tile icon + name/category (clean hierarchy, no noisy cover) */}
         <div className="flex items-start gap-3.5">
           {(Icon || brandIcon) && (
-            <div className="grid place-items-center w-11 h-11 rounded-xl shrink-0 shadow-sm transition-transform duration-200 group-hover:scale-[1.04]"
-              style={{ background: `linear-gradient(140deg, ${tint}, ${tint}cc)` }}>
+            <div className="grid place-items-center w-11 h-11 rounded-xl shrink-0"
+              style={{ background: tint }}>
               <Glyph icon={Icon} brand={brandIcon} size={21} />
             </div>
           )}
@@ -154,7 +154,7 @@ export function FilterBar({ search, onSearch, chips, active, onChip, sort, searc
             value={search}
             onChange={(e) => onSearch(e.target.value)}
             placeholder={searchPlaceholder}
-            className="w-full h-11 ps-10 pe-4 rounded-full border border-border bg-card/40 text-sm outline-none focus:border-[color:rgba(31,199,220,.5)] transition-colors"
+            className="w-full h-11 ps-10 pe-4 rounded-full border border-border bg-card/40 text-sm outline-none focus:border-primary transition-colors"
           />
         </div>
         {sort && (
@@ -163,7 +163,7 @@ export function FilterBar({ search, onSearch, chips, active, onChip, sort, searc
             onChange={(e) => sort.onSort(e.target.value)}
             className="h-11 px-4 rounded-full border border-border bg-card/40 text-sm outline-none cursor-pointer"
           >
-            {sort.options.map((o) => <option key={o.value} value={o.value} className="bg-[#0b1016]">{o.label}</option>)}
+            {sort.options.map((o) => <option key={o.value} value={o.value} className="bg-background">{o.label}</option>)}
           </select>
         )}
       </div>
@@ -177,7 +177,7 @@ export function FilterBar({ search, onSearch, chips, active, onChip, sort, searc
               className={cn(
                 "font-mono text-[12px] px-3.5 py-1.5 rounded-full border transition-colors",
                 on
-                  ? "border-[color:rgba(31,199,220,.5)] text-[#5CDDEC] bg-[color:rgba(31,199,220,.08)]"
+                  ? "border-primary text-foreground bg-primary/10"
                   : "border-border text-muted-foreground hover:text-foreground hover:bg-card/40",
               )}
             >
@@ -202,7 +202,7 @@ export function Pager({ page, pages, onPage, className }: { page: number; pages:
       {nums.map((n, i) => (
         <React.Fragment key={n}>
           {i > 0 && n - nums[i - 1] > 1 && <span className="text-muted-foreground/50 px-1">…</span>}
-          <button onClick={() => onPage(n)} className={cn(btn, n === page ? "border-[color:rgba(31,199,220,.5)] text-[#5CDDEC] bg-[color:rgba(31,199,220,.08)]" : "border-border text-muted-foreground hover:text-foreground")}>{n}</button>
+          <button onClick={() => onPage(n)} className={cn(btn, n === page ? "border-primary text-foreground bg-primary/10" : "border-border text-muted-foreground hover:text-foreground")}>{n}</button>
         </React.Fragment>
       ))}
       <button disabled={page >= pages} onClick={() => onPage(page + 1)} className={cn(btn, "border-border text-muted-foreground hover:text-foreground disabled:opacity-30")}>›</button>

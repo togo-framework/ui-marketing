@@ -43,7 +43,7 @@ function fullFrame(steps: TerminalStep[]): Frame {
   steps.forEach((s, i) => {
     lines.push(
       <div key={`c${i}`} className="whitespace-pre-wrap break-words">
-        <span className="text-[#5CDDEC]">❯ </span>
+        <span className="text-primary">❯ </span>
         <span className="text-foreground">{s.cmd}</span>
       </div>,
     );
@@ -84,13 +84,13 @@ export function TypingTerminal({ steps, endSlot, title = "~/myapp — togo", cla
           for (let c = 1; c <= s.cmd.length && alive; c++) {
             const typed = s.cmd.slice(0, c);
             setFrame({
-              lines: [...lines, <div key={`c${i}`} className="whitespace-pre-wrap break-words"><span className="text-[#5CDDEC]">❯ </span><span className="text-foreground">{typed}</span><span className="ml-0.5 inline-block w-2 -mb-0.5 h-4 bg-[#5CDDEC] animate-pulse" /></div>],
+              lines: [...lines, <div key={`c${i}`} className="whitespace-pre-wrap break-words"><span className="text-primary">❯ </span><span className="text-foreground">{typed}</span><span className="ml-0.5 inline-block w-2 -mb-0.5 h-4 bg-primary animate-pulse" /></div>],
               showEnd: false,
             });
             toBottom();
             await wait(typeMs);
           }
-          lines.push(<div key={`c${i}`} className="whitespace-pre-wrap break-words"><span className="text-[#5CDDEC]">❯ </span><span className="text-foreground">{s.cmd}</span></div>);
+          lines.push(<div key={`c${i}`} className="whitespace-pre-wrap break-words"><span className="text-primary">❯ </span><span className="text-foreground">{s.cmd}</span></div>);
           await wait(220);
           for (let j = 0; j < (s.out?.length || 0) && alive; j++) {
             lines.push(<div key={`o${i}-${j}`} className="whitespace-pre-wrap break-words text-muted-foreground">{s.out![j]}</div>);
@@ -111,9 +111,9 @@ export function TypingTerminal({ steps, endSlot, title = "~/myapp — togo", cla
   }, [steps, typeMs, lineMs, loop, runId]);
 
   return (
-    <div className={cn("rounded-2xl border border-border overflow-hidden bg-[#080b0f] shadow-2xl", className)}>
+    <div className={cn("rounded-2xl border border-border overflow-hidden bg-background shadow-2xl", className)}>
       <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
-        <span className="w-3 h-3 rounded-full bg-[#ff5f57]" /><span className="w-3 h-3 rounded-full bg-[#febc2e]" /><span className="w-3 h-3 rounded-full bg-[#28c840]" />
+        <span className="w-3 h-3 bg-border" /><span className="w-3 h-3 bg-border" /><span className="w-3 h-3 bg-border" />
         <span className="ms-2 font-mono text-xs text-muted-foreground">{title}</span>
         {done && !loop && (
           <button

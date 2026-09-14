@@ -15,7 +15,7 @@ export const Default: Story = {
     name: "auth",
     href: "#",
     category: "Auth",
-    categoryColor: "#2D8CE6",
+    categoryColor: "#1F8A99",
     icon: ShieldCheck,
     description: "JWT + RBAC + multi-guard, Supabase/GoTrue first-class, OTP/2FA.",
     author: "togo-framework",
@@ -26,6 +26,6 @@ export const Default: Story = {
 };
 
 export const Enabled: Story = {
-  args: { ...Default.args, enabled: true, name: "dashboard", category: "UI & i18n", categoryColor: "#1FC7DC" },
+  args: { ...Default.args, enabled: true, name: "dashboard", category: "UI & i18n", categoryColor: "#1F8A99" },
   render: (args) => <div className="w-80"><MarketplaceCard {...args} /></div>,
 };

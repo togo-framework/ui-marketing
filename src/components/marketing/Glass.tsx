@@ -3,36 +3,29 @@
 import * as React from "react";
 import { cn } from "@togo-framework/ui-core";
 
-// Display type names Sora WITH a fallback (a bare `Sora` drops to serif when slow).
-const DISPLAY: React.CSSProperties = { fontFamily: '"Sora", var(--togo-font-body, ui-sans-serif, system-ui, sans-serif)' };
+// Display type follows the kit's display face (Lusail on the grid).
+const DISPLAY: React.CSSProperties = { fontFamily: "var(--togo-font-display, ui-sans-serif, system-ui, sans-serif)" };
 
 // ── AuroraBackground ────────────────────────────────────────────────────────────
-// Soft, slowly-drifting ToGO-gradient orbs + a faint grid, sitting behind content.
-// CSS-only, GPU-friendly, and frozen under prefers-reduced-motion.
+// The grid behind content: 1px hairlines on the ground, fading out from the top.
+// No orbs, no blur, no gradient colour — fadymondy.com's lines in the ToGO palette.
+// The name and `intensity` are kept so existing pages keep compiling.
 export interface AuroraBackgroundProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** Dim the orbs (0–1). Default 1. */
+  /** Line strength (0–1). Default 1. */
   intensity?: number;
 }
 export function AuroraBackground({ className, intensity = 1, style, ...rest }: AuroraBackgroundProps) {
   return (
     <div aria-hidden className={cn("pointer-events-none absolute inset-0 -z-10 overflow-hidden", className)} style={style} {...rest}>
-      <style>{`
-        @keyframes tg-aurora-a { 0%,100%{transform:translate3d(-6%,-4%,0) scale(1)} 50%{transform:translate3d(8%,6%,0) scale(1.15)} }
-        @keyframes tg-aurora-b { 0%,100%{transform:translate3d(6%,8%,0) scale(1.1)} 50%{transform:translate3d(-8%,-6%,0) scale(.95)} }
-        @keyframes tg-aurora-c { 0%,100%{transform:translate3d(0,0,0) scale(1.05)} 50%{transform:translate3d(-10%,4%,0) scale(1.2)} }
-        .tg-orb{position:absolute;border-radius:9999px;filter:blur(70px);opacity:${0.5 * intensity};mix-blend-mode:screen}
-        @media (prefers-reduced-motion: reduce){ .tg-orb{animation:none!important} }
-      `}</style>
-      <div className="tg-orb" style={{ width: "46vw", height: "46vw", top: "-12%", left: "8%", background: "radial-gradient(circle, #1FC7DC, transparent 65%)", animation: "tg-aurora-a 22s ease-in-out infinite" }} />
-      <div className="tg-orb" style={{ width: "50vw", height: "50vw", top: "-18%", right: "2%", background: "radial-gradient(circle, #2D8CE6, transparent 65%)", animation: "tg-aurora-b 26s ease-in-out infinite" }} />
-      <div className="tg-orb" style={{ width: "42vw", height: "42vw", top: "20%", left: "30%", background: "radial-gradient(circle, #1659C8, transparent 68%)", animation: "tg-aurora-c 30s ease-in-out infinite" }} />
       <div
-        className="absolute inset-0 opacity-[0.35]"
+        className="absolute inset-0"
         style={{
-          backgroundImage: "linear-gradient(rgba(120,140,160,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(120,140,160,.10) 1px,transparent 1px)",
+          opacity: 0.6 * intensity,
+          backgroundImage:
+            "linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)",
           backgroundSize: "56px 56px",
-          maskImage: "radial-gradient(900px 600px at 50% 0%, #000, transparent 80%)",
-          WebkitMaskImage: "radial-gradient(900px 600px at 50% 0%, #000, transparent 80%)",
+          maskImage: "linear-gradient(to bottom, #000, transparent 85%)",
+          WebkitMaskImage: "linear-gradient(to bottom, #000, transparent 85%)",
         }}
       />
     </div>
@@ -41,26 +34,17 @@ export function AuroraBackground({ className, intensity = 1, style, ...rest }: A
 AuroraBackground.displayName = "AuroraBackground";
 
 // ── GlassCard ───────────────────────────────────────────────────────────────────
-// Frosted, translucent surface with a hairline gradient border + soft shadow.
+// A grid panel: a hairline box on a surface step. No frosting, no shadow, square corners.
+// `elevation` picks the step: flat = transparent, raised = card, floating = popover.
 export interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
   elevation?: "flat" | "raised" | "floating";
   hover?: boolean;
 }
 export function GlassCard({ className, elevation = "raised", hover = false, children, ...rest }: GlassCardProps) {
-  const shadow =
-    elevation === "floating" ? "shadow-[0_30px_80px_-30px_rgba(0,0,0,.7)]" :
-    elevation === "raised" ? "shadow-[0_16px_50px_-24px_rgba(0,0,0,.6)]" : "";
+  const surface = elevation === "floating" ? "bg-popover" : elevation === "raised" ? "bg-card" : "bg-transparent";
   return (
     <div
-      className={cn(
-        "relative rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl",
-        "before:pointer-events-none before:absolute before:inset-0 before:rounded-2xl before:p-px",
-        "before:[background:linear-gradient(140deg,rgba(255,255,255,.18),rgba(255,255,255,0)_40%)]",
-        "before:[mask:linear-gradient(#000,#000)_content-box,linear-gradient(#000,#000)] before:[mask-composite:exclude]",
-        shadow,
-        hover && "transition-transform duration-300 hover:-translate-y-1",
-        className,
-      )}
+      className={cn("relative border border-border", surface, hover && "transition-colors hover:border-foreground/30", className)}
       {...rest}
     >
       {children}
@@ -70,9 +54,9 @@ export function GlassCard({ className, elevation = "raised", hover = false, chil
 GlassCard.displayName = "GlassCard";
 
 // ── Reveal ──────────────────────────────────────────────────────────────────────
-// Scroll-reveal (fade + slide-up). Defaults to VISIBLE — pre-JS, during prerender
+// Scroll-reveal (fade). Defaults to VISIBLE — pre-JS, during prerender
 // (navigator.webdriver), and under prefers-reduced-motion it never hides, so the
-// static HTML always contains the content for crawlers.
+// static HTML always contains the content for crawlers. No slide: the grid moves colour only.
 export interface RevealProps extends React.HTMLAttributes<HTMLDivElement> {
   delayMs?: number;
   as?: React.ElementType;
@@ -96,13 +80,12 @@ export function Reveal({ className, delayMs = 0, as: Tag = "div", children, styl
     io.observe(el);
     return () => io.disconnect();
   }, []);
-  const motion = state === "static" ? "" :
-    state === "hidden" ? "opacity-0 translate-y-5" : "opacity-100 translate-y-0";
+  const motion = state === "static" ? "" : state === "hidden" ? "opacity-0" : "opacity-100";
   return (
     <Tag
       ref={ref as any}
       style={{ transitionDelay: `${delayMs}ms`, ...style }}
-      className={cn("transition-all duration-[700ms] ease-out will-change-[opacity,transform]", motion, className)}
+      className={cn("transition-opacity duration-[700ms] ease-out", motion, className)}
       {...rest}
     >
       {children}
@@ -112,41 +95,42 @@ export function Reveal({ className, delayMs = 0, as: Tag = "div", children, styl
 Reveal.displayName = "Reveal";
 
 // ── MockupWindow ──────────────────────────────────────────────────────────────────
-// A floating frosted "app window" (traffic-light dots + title) to frame product UI.
+// A framed "app window" (three square cells + title) to show product UI on the grid.
 export interface MockupWindowProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   title?: React.ReactNode;
 }
 export function MockupWindow({ className, title, children, ...rest }: MockupWindowProps) {
   return (
     <GlassCard elevation="floating" className={cn("overflow-hidden", className)} {...rest}>
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-white/[0.03]">
-        <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-        <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-        <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-        {title ? <span className="ms-2 font-mono text-xs text-muted-foreground truncate">{title}</span> : null}
+      <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+        <span className="h-2.5 w-2.5 bg-border" />
+        <span className="h-2.5 w-2.5 bg-border" />
+        <span className="h-2.5 w-2.5 bg-border" />
+        {title ? <span className="ms-2 truncate font-mono text-xs text-muted-foreground">{title}</span> : null}
       </div>
-      <div className="bg-[#080b0f]/80">{children}</div>
+      <div className="bg-background">{children}</div>
     </GlassCard>
   );
 }
 MockupWindow.displayName = "MockupWindow";
 
 // ── PillButton ────────────────────────────────────────────────────────────────────
-// Fully-rounded CTA. variant: "flow" (brand gradient) | "glass" (frosted).
+// Call-to-action link. On the grid it is a 6px control: "flow" is the solid teal action,
+// "glass" the hairline outline. (The names are kept for existing pages.)
 export interface PillButtonProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   variant?: "flow" | "glass";
   size?: "md" | "lg";
 }
 export function PillButton({ className, variant = "flow", size = "lg", children, ...rest }: PillButtonProps) {
-  const sz = size === "lg" ? "h-[52px] px-7 text-base" : "h-11 px-5 text-sm";
+  const sz = size === "lg" ? "h-12 px-6 text-base" : "h-10 px-4 text-sm";
   const look =
     variant === "flow"
-      ? "text-white shadow-[0_12px_34px_-10px_rgba(22,89,200,.7)] hover:-translate-y-0.5"
-      : "text-foreground border border-white/15 bg-white/[0.06] backdrop-blur-md hover:bg-white/[0.1]";
+      ? "bg-primary text-primary-foreground hover:bg-primary/90"
+      : "border border-border bg-transparent text-foreground hover:bg-muted";
   return (
     <a
-      style={variant === "flow" ? { backgroundImage: "linear-gradient(110deg,#1FC7DC,#2D8CE6 50%,#1659C8)", ...DISPLAY } : DISPLAY}
-      className={cn("inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200", sz, look, className)}
+      style={DISPLAY}
+      className={cn("inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors", sz, look, className)}
       {...rest}
     >
       {children}

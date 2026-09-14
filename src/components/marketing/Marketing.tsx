@@ -5,9 +5,9 @@ import type { LucideIcon } from "lucide-react";
 import { cn } from "@togo-framework/ui-core";
 import { CodeBlock } from "@togo-framework/ui-markdown";
 
-// Display type must name Sora WITH a fallback — a bare `Sora` drops to the browser's
+// Display type goes through the kit's display token WITH a fallback — a bare family drops to the browser's
 // serif default when the font is slow/unavailable.
-const DISPLAY: React.CSSProperties = { fontFamily: '"Sora", var(--togo-font-body, ui-sans-serif, system-ui, sans-serif)' };
+const DISPLAY: React.CSSProperties = { fontFamily: "var(--togo-font-display, ui-sans-serif, system-ui, sans-serif)" };
 
 // ── Eyebrow — small mono label with an optional icon ───────────────────────────
 export interface EyebrowProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -29,7 +29,7 @@ export function Eyebrow({ icon: Icon, className, children, ...rest }: EyebrowPro
 }
 Eyebrow.displayName = "Eyebrow";
 
-// ── SectionHeading — eyebrow + Sora title + optional subtitle ───────────────────
+// ── SectionHeading — eyebrow + display title + optional subtitle ───────────────────
 export interface SectionHeadingProps {
   eyebrow?: React.ReactNode;
   eyebrowIcon?: LucideIcon;
@@ -50,7 +50,7 @@ export function SectionHeading({ eyebrow, eyebrowIcon, title, subtitle, align = 
 }
 SectionHeading.displayName = "SectionHeading";
 
-// ── FeatureCard — icon + Sora title + body ──────────────────────────────────────
+// ── FeatureCard — icon + display title + body ──────────────────────────────────────
 export interface FeatureCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
   icon?: LucideIcon;
   title: React.ReactNode;
